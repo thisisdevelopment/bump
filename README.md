@@ -2,7 +2,7 @@
 version bump tool compatible with govvv
 
 Installation:
-  go get https://github.com/thisisdevelopment/bump.git
+  go get github.com/thisisdevelopment/bump
 
 Getting help:
   bump -h
