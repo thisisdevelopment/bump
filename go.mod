@@ -2,4 +2,9 @@ module github.com/thisisdevelopment/bump
 
 go 1.16
 
-require github.com/thisisdevelopment/go-dockly v1.0.2
+require (
+	github.com/logrusorgru/aurora v2.0.3+incompatible
+	github.com/sirupsen/logrus v1.6.0
+	github.com/stretchr/testify v1.5.1 // indirect
+	gopkg.in/yaml.v2 v2.2.8 // indirect
+)

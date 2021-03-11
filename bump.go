@@ -8,8 +8,7 @@ import (
 	"os"
 
 	"github.com/logrusorgru/aurora"
-
-	"github.com/thisisdevelopment/go-dockly/xerrors/iferr"
+	log "github.com/sirupsen/logrus"
 )
 
 const (
@@ -33,19 +32,19 @@ func main() {
 
 	bumpme, ok := sections[*section]
 	if !ok {
-		iferr.Exit(fmt.Errorf("invalid bump: %s", *section))
+		exitif(fmt.Errorf("invalid bump type"), *section)
 	}
 
 	if *force {
 		f, err = os.Create(filename)
-		iferr.Exit(err, "failed to create VERSION")
+		exitif(err, "failed to create VERSION")
 	} else {
 		f, err = os.OpenFile(filename, os.O_RDWR, 0644)
-		iferr.Exit(err, "consider using: bump -f")
+		exitif(err, "consider using: bump -f")
 	}
 
 	defer func() {
-		iferr.Exit(f.Close(), "closing VERSION")
+		exitif(f.Close(), "closing VERSION")
 	}()
 
 	if *manual != "" {
@@ -72,10 +71,10 @@ func main() {
 	}
 
 	_, err = f.Seek(0, io.SeekStart)
-	iferr.Exit(err, "io seek")
+	exitif(err, "io seek")
 
 	_, err = fmt.Fprintf(f, format, major, minor, patch, hash)
-	iferr.Exit(err, "io write")
+	exitif(err, "io write")
 
 	fmt.Printf(
 		"version %s bumped to "+format+"\n",
@@ -89,10 +88,10 @@ func main() {
 
 func getCommitHash(path string) string {
 	f, err := os.OpenFile(".git/"+path, os.O_RDONLY, 0644)
-	iferr.Exit(err, "failed to extract commit hash")
+	exitif(err, "failed to extract commit hash")
 
 	defer func() {
-		iferr.Exit(f.Close(), fmt.Sprintf("closing %s", path))
+		exitif(f.Close(), fmt.Sprintf("closing %s", path))
 	}()
 
 	scanner := bufio.NewScanner(f)
@@ -105,4 +104,14 @@ func getCommitHash(path string) string {
 	}
 
 	return row[:7] // 4fa39df or short of revision hash (4fa39dfe2e8be5838fc4251f6aada4caa59ea2bf)
+}
+
+func exitif(err error, format string, ctx ...interface{}) {
+	if err != nil {
+		if len(ctx) > 0 {
+			format = aurora.Sprintf(format, ctx...)
+		}
+		log.Error(aurora.Sprintf("%v %s", aurora.BrightRed(err), aurora.Yellow(format)))
+		os.Exit(-1)
+	}
 }
