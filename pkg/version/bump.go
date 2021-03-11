@@ -128,7 +128,7 @@ func Change(vtype Type, value string) (*Version, error) {
 		}
 		version.Patch++
 	} else {
-		return nil, fmt.Errorf("invalid version type: %s", vtype)
+		return nil, fmt.Errorf("invalid type: %s", vtype)
 	}
 	return version, nil
 }

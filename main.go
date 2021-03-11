@@ -14,7 +14,6 @@ import (
 
 const (
 	filename = "VERSION"
-	format   = "%d.%d.%d%s"
 )
 
 // bump is a little helper to update a semantic VERSION file
@@ -30,19 +29,20 @@ func main() {
 
 	if *force {
 		f, err = os.Create(filename)
-		exitif(err, "failed to create ./VERSION")
+		exitif(err, "failed to create %s", filename)
 	} else {
 		f, err = os.OpenFile(filename, os.O_RDWR, 0644)
 		exitif(err, "consider using: bump -f")
 	}
 
 	defer func() {
-		exitif(f.Close(), "closing VERSION")
+		exitif(f.Close(), "failed to close %s", filename)
 	}()
 
 	vCurrent = read(f)
-	vNew, err = version.Change(version.Type(*section), vCurrent)
-	exitif(err, "change version")
+	var vType = version.Type(*section)
+	vNew, err = version.Change(vType, vCurrent)
+	exitif(err, "failed to change version")
 
 	if *commit {
 		// append commit hash
@@ -52,10 +52,10 @@ func main() {
 	}
 
 	_, err = f.Seek(0, io.SeekStart)
-	exitif(err, "io seek")
+	exitif(err, "io seek failed")
 
 	_, err = fmt.Fprintf(f, "%s%s", vNew.String(), hash)
-	exitif(err, "io write")
+	exitif(err, "io write failed")
 
 	fmt.Printf(
 		"version %s bumped to %s%s\n",
@@ -70,7 +70,7 @@ func getCommitHash(path string) string {
 	exitif(err, "failed to extract commit hash")
 
 	defer func() {
-		exitif(f.Close(), fmt.Sprintf("closing %s", path))
+		exitif(f.Close(), "failed to close %s", path)
 	}()
 
 	var row = read(f)
