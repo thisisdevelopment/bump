@@ -27,7 +27,7 @@ var (
 	GitState string
 	// BuildDate holds RFC3339 formatted UTC date (build time)
 	BuildDate string
-	// Version holds contents of ./VERSION file, if exists, or the value passed via the -version option
+	// Version holds contents of ./VERSION file
 	Version string
 )
 
@@ -49,7 +49,7 @@ func main() {
 	}
 
 	f, err = xio.GetFile(path, *force)
-	xerr.Exitif(err, "xio.GetFile")
+	xerr.Exitif(err, "try run bump -f")
 
 	defer func() {
 		xerr.Exitif(f.Close(), "failed to close %s", path)
@@ -82,7 +82,7 @@ func main() {
 
 	if *verbose {
 		log.Printf(
-			"version %s bumped to %s%s\n",
+			"%s > %s%s\n",
 			aurora.Cyan(vCurrent),
 			aurora.BrightGreen(vNew.String()),
 			aurora.Yellow(hash),
