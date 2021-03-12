@@ -28,13 +28,14 @@ type Version struct {
 }
 
 func (v *Version) String() string {
-	if v.Major >= 0 && v.Minor >= 0 && v.Patch >= 0 {
+	switch true {
+	case v.Major >= 0 && v.Minor >= 0 && v.Patch >= 0:
 		return fmt.Sprintf("%d.%d.%d", v.Major, v.Minor, v.Patch)
-	} else if v.Major >= 0 && v.Minor >= 0 {
+	case v.Major >= 0 && v.Minor >= 0:
 		return fmt.Sprintf("%d.%d", v.Major, v.Minor)
-	} else if v.Major >= 0 {
+	case v.Major >= 0:
 		return fmt.Sprintf("%d", v.Major)
-	} else {
+	default:
 		return "%!s(INVALID_VERSION)"
 	}
 }
@@ -106,7 +107,8 @@ func Change(vtype Type, value string) (*Version, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "parsing version")
 	}
-	if vtype == Major {
+	switch true {
+	case vtype == Major:
 		version.Major++
 		if version.Minor != -1 {
 			version.Minor = 0
@@ -114,7 +116,7 @@ func Change(vtype Type, value string) (*Version, error) {
 		if version.Patch != -1 {
 			version.Patch = 0
 		}
-	} else if vtype == Minor {
+	case vtype == Minor:
 		if version.Minor == -1 {
 			version.Minor = 0
 		}
@@ -122,13 +124,14 @@ func Change(vtype Type, value string) (*Version, error) {
 			version.Patch = 0
 		}
 		version.Minor++
-	} else if vtype == Patch {
+	case vtype == Patch:
 		if version.Patch == -1 {
 			version.Patch = 0
 		}
 		version.Patch++
-	} else {
+	default:
 		return nil, fmt.Errorf("invalid type: %s", vtype)
 	}
+
 	return version, nil
 }
