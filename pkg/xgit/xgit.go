@@ -7,7 +7,7 @@ import (
 	"github.com/thisisdevelopment/bump/pkg/xio"
 )
 
-// GetCommitHash tries to extracts the current commit hash pointed to by ./.git/HEAD
+// GetCommitHash tries to extract the current commit hash pointed to by ./.git/HEAD
 func GetCommitHash(path string) string {
 	f, err := os.OpenFile(".git/"+path, os.O_RDONLY, 0644)
 	xerr.Exitif(err, "failed to extract commit hash")

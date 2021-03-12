@@ -74,12 +74,12 @@ func main() {
 
 func buildInfo() {
 	if Version != "" {
-		fmt.Printf(`%s
-Version: %s
-Commit: %s
-Branch: %s
-Status: %s
-BuildDate: %s`+"\n\n",
+		fmt.Printf(`%s(
+	Version: %s
+	Commit: %s
+	Branch: %s
+	Status: %s
+	BuildDate: %s)`+"\n\n",
 			aurora.Cyan("ThisIsSemanticBump"),
 			aurora.Yellow(Version),
 			aurora.Yellow(GitCommit),
