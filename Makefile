@@ -20,16 +20,16 @@ gc:
 govvv:
 	go get -u github.com/ahmetb/govvv
 
-# api will compile the executable
+# will compile the executable
 bump:
 	env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -ldflags "$(FLAGS)" -o $(OUTPUT_DIR)/$(BINARY_NAME) main.go
 
-# runs the project locally in dev mode
+# will test compile and sha the binary
 prod: test
 	make bump
 	echo "Generating SHA256 Binary Hash of executable"
-	cat bin/app | shasum -a 256
-	bin/bump -f
+	cat $(OUTPUT_DIR)/$(BINARY_NAME) | shasum -a 256
+	echo try running bin/$(BINARY_NAME) -f
 
 # .PHONY is used for reserving tasks words
 .PHONY: clean test gc govvv bump prod
