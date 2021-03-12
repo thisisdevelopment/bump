@@ -44,7 +44,7 @@ func main() {
 	flag.Parse()
 
 	f, err = xio.GetFile(path, *force)
-	xerr.Exitif(err, "failed to create %s", path)
+	xerr.Exitif(err, "xio.GetFile")
 
 	defer func() {
 		xerr.Exitif(f.Close(), "failed to close %s", path)
