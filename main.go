@@ -75,8 +75,6 @@ func main() {
 	if *commit {
 		// append commit hash
 		hash = "-" + xgit.GetCommitHash("HEAD")
-	} else {
-		hash = "" // clear if set previously
 	}
 
 	err = xio.ReplaceContent(f, fmt.Sprintf("%s%s", vNew.String(), hash))
@@ -96,17 +94,19 @@ func main() {
 }
 
 func buildInfo() {
-	fmt.Printf(`%s(
+	if Version != "" {
+		fmt.Printf(`%s(
 	Version: %s
 	Commit: %s
 	Branch: %s
 	Status: %s
 	BuildDate: %s)`+"\n\n",
-		aurora.Cyan("ThisIsSemanticBump"),
-		aurora.Yellow(Version),
-		aurora.Yellow(GitCommit),
-		GitBranch,
-		GitState,
-		aurora.Yellow(BuildDate))
-
+			aurora.Cyan("ThisIsSemanticBump"),
+			aurora.Yellow(Version),
+			aurora.Yellow(GitCommit),
+			GitBranch,
+			GitState,
+			aurora.Yellow(BuildDate),
+		)
+	}
 }

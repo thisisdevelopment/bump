@@ -1,9 +1,9 @@
-SHELL := /bin/bash
 DIR := $(shell pwd)
 BINARY_NAME := bump
 OUTPUT_DIR := ${DIR}/bin
 # govvv will inject version specific build flags 
 FLAGS :=  $(shell sh -c 'govvv -flags')
+VERSION := ${shell sh -c 'cat VERSION'}
 
 clean:
 	@echo ">> removing previous builds"
@@ -29,10 +29,12 @@ prod: test
 	make bump
 	@echo ">> Generating SHA256 Binary Hash of executable"
 	@cat $(OUTPUT_DIR)/$(BINARY_NAME) | shasum -a 256
-	@echo ">> try running bin/$(BINARY_NAME) -h"
+	@cp $(OUTPUT_DIR)/$(BINARY_NAME) ${GOPATH}/bin/$(BINARY_NAME)
+	@echo ">> try running $(BINARY_NAME) -h"
 
-release:
-	@bin/$(BINARY_NAME) -h
+tag:
+	git tag ${VERSION}
+	git push --tags
 
 # .PHONY is used for reserving tasks words
-.PHONY: clean test gc govvv bump prod
+.PHONY: clean test gc govvv bump prod tag
