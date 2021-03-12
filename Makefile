@@ -7,7 +7,7 @@ FLAGS :=  $(shell sh -c 'govvv -flags')
 
 clean:
 	@echo ">> removing previous builds"
-	@rm -rf $(OUTPUTDIR)
+	@rm -rf $(OUTPUT_DIR)
 
 test:
 	go test ./pkg/version/. -coverprofile coverage/version.out
@@ -32,4 +32,4 @@ prod: test
 	bin/bump -f
 
 # .PHONY is used for reserving tasks words
-.PHONY: clean test gc bump prod
+.PHONY: clean test gc govvv bump prod
