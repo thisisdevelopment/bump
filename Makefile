@@ -29,7 +29,7 @@ prod: test
 	make bump
 	echo "Generating SHA256 Binary Hash of executable"
 	cat $(OUTPUT_DIR)/$(BINARY_NAME) | shasum -a 256
-	echo try running bin/$(BINARY_NAME) -f
+	echo try running bin/$(BINARY_NAME) -h
 
 # .PHONY is used for reserving tasks words
 .PHONY: clean test gc govvv bump prod
