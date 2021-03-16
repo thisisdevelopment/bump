@@ -35,7 +35,7 @@ var (
 func main() {
 	var err error
 	var f *os.File
-	var vNew *version.Version
+	var vNew version.Version
 	var vCurrent, hash string
 	var section = flag.String("b", "patch", "which section to bump: major, minor or patch")
 	var force = flag.Bool("f", false, "force create ./"+path)
@@ -69,9 +69,11 @@ func main() {
 		os.Exit(0)
 	}
 
-	vNew, err = version.Change(version.Type(*section), vCurrent)
-	xerr.Exitif(err, "failed to change version")
-
+	err = vNew.Set(vCurrent)
+	xerr.Exitif(err, "failed to set version")
+	err = vNew.Inc(*section)
+	xerr.Exitif(err, "failed to increment version")
+  
 	if *commit {
 		// append commit hash
 		hash = "-" + xgit.GetCommitHash("HEAD")
