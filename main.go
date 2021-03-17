@@ -69,10 +69,8 @@ func main() {
 		os.Exit(0)
 	}
 
-	err = vNew.Set(vCurrent)
-	xerr.Exitif(err, "failed to set version")
-	err = vNew.Inc(*section)
-	xerr.Exitif(err, "failed to increment version")
+	err = vNew.Change(vCurrent, *section)
+	xerr.Exitif(err, "failed to change version")
   
 	if *commit {
 		// append commit hash
@@ -92,7 +90,6 @@ func main() {
 	} else {
 		fmt.Println(vNew.String() + hash)
 	}
-
 }
 
 func buildInfo() {
