@@ -52,7 +52,7 @@ func (v *Version) Set(ver string) error {
     return nil
   }
 
-  return errors.Wrap(err, "parsing version")
+  return errors.Wrap(err, "parsing failed")
 }
 
 // Inc increments the indicated portion of the Version value
@@ -76,11 +76,11 @@ func (v *Version) Inc(vtype string) error {
 func (v *Version) Change(ver, vtype string) error {
   err := v.Set(ver)
   if err != nil {
-    return err
+    return errors.Wrap(err, "setting failed")
   }
   err = v.Inc(vtype)
   if err != nil {
-    return err
+    return errors.Wrap(err, "incrementing failed")
   }
   return nil
 }
