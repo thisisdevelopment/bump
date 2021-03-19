@@ -35,7 +35,7 @@ var (
 func main() {
 	var err error
 	var f *os.File
-	var vNew *version.Version
+	var vNew version.Version
 	var vCurrent, hash string
 	var section = flag.String("b", "patch", "which section to bump: major, minor or patch")
 	var force = flag.Bool("f", false, "force create ./"+path)
@@ -69,9 +69,9 @@ func main() {
 		os.Exit(0)
 	}
 
-	vNew, err = version.Change(version.Type(*section), vCurrent)
+	err = vNew.Change(vCurrent, *section)
 	xerr.Exitif(err, "failed to change version")
-
+  
 	if *commit {
 		// append commit hash
 		hash = "-" + xgit.GetCommitHash("HEAD")
@@ -90,7 +90,6 @@ func main() {
 	} else {
 		fmt.Println(vNew.String() + hash)
 	}
-
 }
 
 func buildInfo() {
